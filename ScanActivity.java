@@ -143,13 +143,13 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
             e.printStackTrace();
         }
         Log.d("QRCodeScanner: NameMap", idNameMap.toString());
-        String nameDisplay;
+        final String nameDisplay;
         Long longValue = Long.parseLong(myResult);
         if(idNameMap.get(longValue) != null) {
             nameDisplay = (String) idNameMap.get(longValue);
         }
         else{
-            nameDisplay = myResult;
+            nameDisplay = "Item not in Database";
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -158,6 +158,7 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Intent sqlIntent = new(Intent.ACTION_MAIN,)
+                Scanning.scanned.add(nameDisplay);
                 scannerView.resumeCameraPreview(ScanActivity.this);
             }
         });

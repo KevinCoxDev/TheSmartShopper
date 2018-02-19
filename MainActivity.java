@@ -1,25 +1,23 @@
 package kevin.cox.thesmartshopper;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerViewAdapter adapter;
+
 
 
     @Override
@@ -45,29 +43,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // data to populate the RecyclerView with
-        ArrayList<String> jsonList = new ArrayList<>();
-        JSONPullThread pullJson = new JSONPullThread();
-        try {
-            jsonList = pullJson.execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        jsonList.add("Test");
 
-
-        RecyclerView recyclerView = findViewById(R.id.simpleListView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new RecyclerViewAdapter(this, jsonList);
-        //adapter.setClickListener(this);
-        recyclerView.setAdapter(adapter);
-
-    }
-
-    public void onItemClick(View view, int position) {
-        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -93,11 +69,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent myIntent = new Intent(getBaseContext(), SettingsActivity.class);
                 startActivity(myIntent);
 
-            //case R.id.action_:
+            case R.id.action_logout:
                 // User chose the "Favorite" action, mark the current item
                 // as a favorite...
-                //return true;
-
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -107,6 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void loadFragment(Fragment fragment) {
+        // create a FragmentManager
+        FragmentManager fm = getFragmentManager();
+        // create a FragmentTransaction to begin the transaction and replace the Fragment
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        // replace the FrameLayout with new Fragment
+        fragmentTransaction.replace(R.id.frameLayout, fragment);
+        fragmentTransaction.commit(); // save the changes
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -114,14 +99,18 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_list:
-
+                    loadFragment(new ShoppingListFragment());
                     return true;
                 case R.id.navigation_budget:
 
                     return true;
                 case R.id.navigation_scan:
-
+                    loadFragment(new ScannedListFragment());
                     return true;
+                case R.id.navigation_cart:
+                    loadFragment(new ScannedListFragment());
+                    return true;
+
             }
             return false;
         }
