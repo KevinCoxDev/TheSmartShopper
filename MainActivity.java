@@ -10,9 +10,13 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +48,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        ItemDataBaseHandler db = new ItemDataBaseHandler(this);
+
+        /**
+         * CRUD Operations
+         * */
+        // Inserting Contacts
+        //Log.d("Insert: ", "Inserting ..");
+        //ShopItem shop1 = new ShopItem(167,"Tea Bags",3.55,"https://cdn.shopify.com/s/files/1/0561/3553/products/UK-112_Barry_s_Tea_Gold_Blend_Tea_Bags_80_ct._8.8oz._250g.jpg?v=1504902460");
+        //db.addItem(shop1);
+
+        try {
+            db.populateFromJson("Replace with url");
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Reading all items
+        Log.d("Reading: ", "Reading all items..");
+        List<ShopItem> items = db.getAllItems();
+        for (ShopItem item : items) {
+            String log = "Id: "+item.getItemId()+" ,Name: " + item.getItemName() + " ,Price: " + item.getItemPrice() + " ,URL: " + item.getImageURL();
+            // Writing Contacts to log
+            Log.d("Name: ", log);
+        }
+
+        Log.d("SHOP ITEM",items.toString());
     }
 
     @Override

@@ -46,6 +46,8 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
             }
         }
 
+
+
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

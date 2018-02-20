@@ -31,7 +31,7 @@ public class JSONParse {
     private Type listType = new TypeToken<ArrayList<ShopItem>>() {}.getType();
 
 
-    private ArrayList<ShopItem> pullJSON(){
+    public ArrayList<ShopItem> pullJSON(){
 
         try {
             URL url =  new URL("https://api.myjson.com/bins/ar7kh");
@@ -73,9 +73,9 @@ public class JSONParse {
         return itemIds;
     }
 
-    public BiMap<Long,String> idNameMap(){
+    public BiMap<Integer,String> idNameMap(){
 
-        BiMap<Long, String> idName = HashBiMap.create();
+        BiMap<Integer, String> idName = HashBiMap.create();
         parseItemList = pullJSON();
         Log.d("JSONParse: idNameMap",parseItemList.toString());
         if(parseItemList != null) {

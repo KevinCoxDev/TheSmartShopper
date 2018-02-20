@@ -6,27 +6,27 @@ package kevin.cox.thesmartshopper;
 
 public class ShopItem {
 
-    private Long itemId;
+    private int itemId;
     private String itemName;
     private Double itemPrice;
-    private String imageURL;
+    private String itemImageURL;
 
-    public ShopItem(Long itemId, String itemName, Double itemPrice, String imageURL) {
+    public ShopItem(int itemId, String itemName, Double itemPrice, String itemImageURL) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
-        this.imageURL = imageURL;
+        this.itemImageURL = itemImageURL;
     }
 
     public String toString(){
-        return itemName + " \n " + itemPrice;
+        return "ItemId: " + itemId+ "\n" + "ItemName: " + itemName+ "\n" + "ItemPrice: " + itemPrice+ "\n" + "ItemImageURL: " + itemImageURL;
     }
 
-    public Long getItemId() {
+    public int getItemId() {
         return itemId;
     }
 
-    public void setItemId(Long itemId) {
+    public void setItemId(int itemId) {
         this.itemId = itemId;
     }
 
@@ -47,10 +47,10 @@ public class ShopItem {
     }
 
     public String getImageURL() {
-        return imageURL;
+        return itemImageURL;
     }
 
     public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+        this.itemImageURL = imageURL;
     }
 }

@@ -9,9 +9,9 @@ import java.util.ArrayList;
  */
 
 
-public class JSONPullThread extends AsyncTask<String,Void,ArrayList<String>> {
+public class JSONPullThread extends AsyncTask<String,Void,ArrayList<ShopItem>> {
 
-    private ArrayList<String> nameList =  new ArrayList<>();
+    private ArrayList<ShopItem> itemList =  new ArrayList<>();
 
     protected void onPreExecute() {
         //showDialog("Downloaded " + result + " bytes");
@@ -22,10 +22,10 @@ public class JSONPullThread extends AsyncTask<String,Void,ArrayList<String>> {
         myMethod(result);
     }
 
-    protected ArrayList<String> doInBackground(String... sURL) {
+    protected ArrayList<ShopItem> doInBackground(String... sURL) {
         JSONParse list = new JSONParse();
-        nameList = list.nameList();
-        return nameList;
+        itemList = list.pullJSON();
+        return itemList;
     }
 
     private ArrayList<String> myMethod(ArrayList myValue) {

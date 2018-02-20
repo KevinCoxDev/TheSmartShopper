@@ -12,7 +12,7 @@ import com.google.common.collect.HashBiMap;
 
 public class CameraCheckThread extends AsyncTask<String,Void,BiMap> {
 
-    private BiMap<Long, String> itemMap = HashBiMap.create();
+    private BiMap<Integer, String> itemMap = HashBiMap.create();
 
     public CameraCheckThread() {
     }
@@ -26,7 +26,7 @@ public class CameraCheckThread extends AsyncTask<String,Void,BiMap> {
         myMethod(result);
     }
 
-    protected BiMap<Long,String> doInBackground(String... sURL) {
+    protected BiMap<Integer,String> doInBackground(String... sURL) {
         JSONParse list = new JSONParse();
         itemMap = list.idNameMap();
         Log.d("Thread: DoInBackground", itemMap.toString());
