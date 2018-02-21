@@ -23,6 +23,8 @@ public class ShoppingListFragment extends Fragment {
 // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_shopping_list, container, false);
         ArrayList<String> jsonList = new ArrayList<>();
+        JSONPullThread pullJson = new JSONPullThread();
+
 
         jsonList.add("Test");
         RecyclerView recyclerView = view.findViewById(R.id.simpleListView);
