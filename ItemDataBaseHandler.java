@@ -19,7 +19,7 @@ public class ItemDataBaseHandler extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 11;
 
     // Database Name
     private static final String DATABASE_NAME = "shopItems";
@@ -42,6 +42,14 @@ public class ItemDataBaseHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
+
+
+        //TODO Delete
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_ITEMS);
+        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCANNED);
+
+
+        //SQL for table creation
         String CREATE_ITEMS_TABLE = "CREATE TABLE " + TABLE_ITEMS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
                 + KEY_PRICE + " DOUBLE," + KEY_IMAGE + " TEXT" + ")";

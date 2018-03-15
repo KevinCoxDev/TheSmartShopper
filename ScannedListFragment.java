@@ -29,13 +29,6 @@ public class ScannedListFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         adapter = new RecyclerViewAdapter(getActivity(), jsonList);
         recyclerView.setAdapter(adapter);
-
-
-
-
-
-
-
         return view;
 
     }

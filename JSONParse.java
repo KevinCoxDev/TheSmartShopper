@@ -34,7 +34,7 @@ public class JSONParse {
     public ArrayList<ShopItem> pullJSON(){
 
         try {
-            URL url =  new URL("https://api.myjson.com/bins/ar7kh");
+            URL url =  new URL("https://api.myjson.com/bins/s4tel");
             Log.d("PRINT URL", String.valueOf(url));
             Reader reader = new InputStreamReader((url).openStream()); //Read the json output
             Gson gson = new GsonBuilder().create();

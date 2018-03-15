@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        populateDatabase();
+        //populateDatabase();
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
@@ -103,8 +103,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_list:
-                    Intent myIntent = new Intent(getBaseContext(), ShoppingListActivity.class);
-                    startActivity(myIntent);
+                    loadFragment(new ShoppingListFragment());
                     return true;
                 case R.id.navigation_budget:
 
@@ -113,8 +112,10 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(new ScannedListFragment());
                     return true;
                 case R.id.navigation_cart:
-                    loadFragment(new ScannedListFragment());
+
                     return true;
+
+
 
             }
             return false;
@@ -124,8 +125,7 @@ public class MainActivity extends AppCompatActivity {
     private void populateDatabase(){
         ItemDataBaseHandler db = new ItemDataBaseHandler(this);
 
-        //ShopItem shop1 = new ShopItem(167,"Tea Bags",3.55,"https://cdn.shopify.com/s/files/1/0561/3553/products/UK-112_Barry_s_Tea_Gold_Blend_Tea_Bags_80_ct._8.8oz._250g.jpg?v=1504902460");
-        //db.addItem(shop1);
+
         try {
             db.populateFromJson("Replace with url","items");
         } catch (ExecutionException e) {

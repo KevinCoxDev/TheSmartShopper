@@ -146,7 +146,7 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
         }
         Log.d("QRCodeScanner: NameMap", idNameMap.toString());
         final String nameDisplay;
-        Long longValue = Long.parseLong(myResult);
+        Integer longValue = Integer.parseInt(myResult);
         if(idNameMap.get(longValue) != null) {
             nameDisplay = (String) idNameMap.get(longValue);
         }
