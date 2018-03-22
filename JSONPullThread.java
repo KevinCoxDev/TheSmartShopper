@@ -1,6 +1,7 @@
 package kevin.cox.thesmartshopper;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -14,16 +15,16 @@ public class JSONPullThread extends AsyncTask<String,Void,ArrayList<ShopItem>> {
     private ArrayList<ShopItem> itemList =  new ArrayList<>();
 
     protected void onPreExecute() {
-        //showDialog("Downloaded " + result + " bytes");
+
     }
 
     protected void onPostExecute(ArrayList<String> result) {
-        //showDialog("Downloaded " + result + " bytes");
         myMethod(result);
     }
 
     protected ArrayList<ShopItem> doInBackground(String... sURL) {
         JSONParse list = new JSONParse();
+        Log.v("Pulling From JSON", list.toString());
         itemList = list.pullJSON();
         return itemList;
     }

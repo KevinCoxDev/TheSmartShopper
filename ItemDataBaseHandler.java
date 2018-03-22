@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -44,11 +43,6 @@ public class ItemDataBaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
 
-        //TODO Delete
-        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_ITEMS);
-        //db.execSQL("DROP TABLE IF EXISTS " + TABLE_SCANNED);
-
-
         //SQL for table creation
         String CREATE_ITEMS_TABLE = "CREATE TABLE " + TABLE_ITEMS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_NAME + " TEXT,"
@@ -60,6 +54,15 @@ public class ItemDataBaseHandler extends SQLiteOpenHelper {
                 + KEY_PRICE + " DOUBLE," + KEY_IMAGE + " TEXT" + ")";
         Log.d("SQL CREATE DB",CREATE_SCANNED_TABLE);
         db.execSQL(CREATE_SCANNED_TABLE);
+
+        try {
+            populateFromJson(TABLE_ITEMS);
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
     // Upgrading database
     @Override
@@ -70,9 +73,10 @@ public class ItemDataBaseHandler extends SQLiteOpenHelper {
 
         // Create tables again
         onCreate(db);
+
     }
 
-    public void populateFromJson(String placeholder,String tableName) throws ExecutionException, InterruptedException {
+    public void populateFromJson(String tableName) throws ExecutionException, InterruptedException {
 
         JSONPullThread thread = new JSONPullThread();
         ArrayList<ShopItem> items = thread.execute().get();
@@ -83,26 +87,31 @@ public class ItemDataBaseHandler extends SQLiteOpenHelper {
 
     // Getting single item
     public ShopItem getItem(int id) {
+
+
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_ITEMS, new String[] { KEY_ID,
-                        KEY_NAME, KEY_PRICE, KEY_IMAGE }, KEY_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
-        if (cursor != null)
-            cursor.moveToFirst();
+        Cursor cursor = db.query(TABLE_ITEMS, new String[]{KEY_ID,
+                        KEY_NAME, KEY_PRICE, KEY_IMAGE}, KEY_ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null, null);
+        if (cursor.moveToFirst()){
+            ShopItem item = new ShopItem(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1), cursor.getDouble(2), cursor.getString(3));
+            // return item
+            return item;
+        }
+        else{
+            return null;
+        }
 
-        ShopItem item = new ShopItem(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1), cursor.getDouble(2),cursor.getString(3));
-        // return item
-        return item;
     }
 
-    public List<ShopItem> getAllItems(String tableName) {
-        List<ShopItem> itemList = new ArrayList<ShopItem>();
+    public ArrayList<ShopItem> getAllItems(String tableName) {
+        ArrayList<ShopItem> itemList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + tableName;
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
@@ -120,7 +129,7 @@ public class ItemDataBaseHandler extends SQLiteOpenHelper {
         return itemList;
     }
 
-    public void addItem(ShopItem item, String databaseName) {
+    public void addItem(ShopItem item, String tableName) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -130,7 +139,13 @@ public class ItemDataBaseHandler extends SQLiteOpenHelper {
         values.put(KEY_IMAGE, item.getImageURL()); // Item Image URL
 
         // Inserting Row
-        db.insert(databaseName, null, values);
-        db.close(); // Closing database connection
+        db.insert(tableName, null, values);
+        // Closing database connection
+        db.close();
+    }
+
+    public void removeItem(String itemId, String tableName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + tableName +" WHERE itemId = " + itemId);
     }
 }

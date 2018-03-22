@@ -2,7 +2,6 @@ package kevin.cox.thesmartshopper;
 
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -13,10 +12,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.common.collect.BiMap;
 import com.google.zxing.Result;
-
-import java.util.concurrent.ExecutionException;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -27,11 +23,11 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
 
     private static final int REQUEST_CAMERA = 1;
     private ZXingScannerView scannerView;
-    private static int camId = Camera.CameraInfo.CAMERA_FACING_BACK;
-    private BiMap idNameMap;
+    private ItemDataBaseHandler db = new ItemDataBaseHandler(this);
+    private ShopItem item;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         scannerView = new ZXingScannerView(this);
@@ -45,18 +41,6 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
                 requestPermission();
             }
         }
-
-
-
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
-    private boolean checkPermission() {
-        return (ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA) == PackageManager.PERMISSION_GRANTED);
-    }
-
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{CAMERA}, REQUEST_CAMERA);
     }
 
     @Override
@@ -120,38 +104,19 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
         }
     }
 
-    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
-        new AlertDialog.Builder(ScanActivity.this)
-                .setMessage(message)
-                .setPositiveButton("OK", okListener)
-                .setNegativeButton("Cancel", null)
-                .create()
-                .show();
-    }
-
     @Override
     public void handleResult(Result result) {
         final String myResult = result.getText();
         Log.d("QRCodeScanner", result.getText());
         Log.d("QRCodeScanner", result.getBarcodeFormat().toString());
 
-
-        CameraCheckThread idNameThread = new CameraCheckThread();
-        try {
-            idNameMap = idNameThread.execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        Log.d("QRCodeScanner: NameMap", idNameMap.toString());
-        final String nameDisplay;
-        Integer longValue = Integer.parseInt(myResult);
-        if(idNameMap.get(longValue) != null) {
-            nameDisplay = (String) idNameMap.get(longValue);
+        item = checkData(myResult);
+        String display;
+        if(item != null){
+            display = item.getItemName();
         }
         else{
-            nameDisplay = "Item not in Database";
+            display = "Item not found in Database";
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -159,8 +124,7 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Intent sqlIntent = new(Intent.ACTION_MAIN,)
-                Scanning.scanned.add(nameDisplay);
+                db.addItem(item,"SCANNED");
                 scannerView.resumeCameraPreview(ScanActivity.this);
             }
         });
@@ -170,8 +134,36 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
                 scannerView.resumeCameraPreview(ScanActivity.this);
             }
         });
-        builder.setMessage(nameDisplay);
+        builder.setMessage(display);
         AlertDialog alert1 = builder.create();
         alert1.show();
+    }
+
+
+    private ShopItem checkData(String id){
+        ShopItem scanned = db.getItem(Integer.parseInt(id));
+        if(scanned != null){
+            return scanned;
+        }
+        return null;
+    }
+
+    private boolean checkPermission() {
+        return (ContextCompat.checkSelfPermission(getApplicationContext(), CAMERA) == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{CAMERA}, REQUEST_CAMERA);
+    }
+
+
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(ScanActivity.this)
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
     }
 }

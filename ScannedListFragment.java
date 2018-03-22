@@ -16,20 +16,38 @@ import java.util.ArrayList;
 
 public class ScannedListFragment extends Fragment {
 
-    View view;
-    private RecyclerViewAdapter adapter;
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-// Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_scanned_list, container, false);
-        ArrayList<String> jsonList = new ArrayList<>();
-        Scanning scanned =  new Scanning();
-        jsonList = scanned.getScanned();
+
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_scanned_list, container, false);
+
+        //Call populateList method. Creates thread to populate list from DB
+        ArrayList<ShopItem> jsonList = populateList();
+
+
         RecyclerView recyclerView = view.findViewById(R.id.simpleListView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new RecyclerViewAdapter(getActivity(), jsonList);
+        RecyclerViewAdapterList adapter = new RecyclerViewAdapterList(getActivity(), jsonList);
         recyclerView.setAdapter(adapter);
-        return view;
 
+
+
+        return view;
+    }
+
+    private ArrayList<ShopItem> populateList(){
+
+        ItemDataBaseHandler db = new ItemDataBaseHandler(getActivity());
+        return db.getAllItems("scanned");
+    }
+
+    private void removeScannedItem(String itemId){
+
+        ItemDataBaseHandler db = new ItemDataBaseHandler(getActivity());
+        db.removeItem(itemId,"scanned");
     }
 }

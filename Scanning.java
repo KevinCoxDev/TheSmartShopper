@@ -8,13 +8,13 @@ import java.util.ArrayList;
 
 public class Scanning {
 
-    public static ArrayList<String> scanned = new ArrayList<String>();
+    public static ArrayList<ShopItem> scanned = new ArrayList<>();
 
-    public ArrayList<String> getScanned(){
+    public ArrayList<ShopItem> getScanned(){
         return scanned;
     }
 
-    public void addToScanned(String item){
+    public void addToScanned(ShopItem item){
         scanned.add(item);
     }
 

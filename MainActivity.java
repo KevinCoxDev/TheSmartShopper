@@ -10,26 +10,21 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
 
 
-
+    private ItemDataBaseHandler db = new ItemDataBaseHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //populateDatabase();
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
@@ -106,7 +101,8 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(new ShoppingListFragment());
                     return true;
                 case R.id.navigation_budget:
-
+                    Intent myIntent = new Intent(getBaseContext(), LoginActivity.class);
+                    startActivity(myIntent);
                     return true;
                 case R.id.navigation_scan:
                     loadFragment(new ScannedListFragment());
@@ -121,18 +117,11 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
-
+/*
     private void populateDatabase(){
         ItemDataBaseHandler db = new ItemDataBaseHandler(this);
 
 
-        try {
-            db.populateFromJson("Replace with url","items");
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         // Reading all items
         Log.d("Reading: ", "Reading all items..");
         List<ShopItem> items = db.getAllItems("items");
@@ -144,6 +133,6 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("SHOP ITEM",items.toString());
     }
-
+*/
 }
 
