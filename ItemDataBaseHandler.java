@@ -100,9 +100,8 @@ public class ItemDataBaseHandler extends SQLiteOpenHelper {
             // return item
             return item;
         }
-        else{
-            return null;
-        }
+        return null;
+
 
     }
 

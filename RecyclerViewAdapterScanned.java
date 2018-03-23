@@ -53,7 +53,7 @@ public class RecyclerViewAdapterScanned extends RecyclerView.Adapter<RecyclerVie
 
         public ViewHolder(View itemView) {
             super(itemView);
-            myTextView1 = itemView.findViewById(R.id.ROW_TEXT_VIEW_1);
+            myTextView1 = itemView.findViewById(R.id.TITLE_TEXT);
             itemView.setOnClickListener(this);
         }
 

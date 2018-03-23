@@ -29,11 +29,8 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
 
-        //Creates toolbar object
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.settings_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
 
         FloatingActionButton scanButton = (FloatingActionButton) findViewById(R.id.fab);
         scanButton.setOnClickListener(new View.OnClickListener() {
@@ -58,28 +55,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(myIntent);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                Intent myIntent = new Intent(getBaseContext(), SettingsActivity.class);
-                startActivity(myIntent);
 
-            case R.id.action_logout:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                return true;
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-        }
-
-    }
 
     private void loadFragment(Fragment fragment) {
         // create a FragmentManager
@@ -101,14 +77,17 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(new ShoppingListFragment());
                     return true;
                 case R.id.navigation_budget:
-                    Intent myIntent = new Intent(getBaseContext(), LoginActivity.class);
-                    startActivity(myIntent);
+                    Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
+                    startActivity(loginIntent);
                     return true;
                 case R.id.navigation_scan:
                     loadFragment(new ScannedListFragment());
                     return true;
                 case R.id.navigation_cart:
 
+                    return true;
+                case R.id.navigation_settings:
+                    loadFragment(new SettingsFragment());
                     return true;
 
 
@@ -117,22 +96,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
-/*
-    private void populateDatabase(){
-        ItemDataBaseHandler db = new ItemDataBaseHandler(this);
 
-
-        // Reading all items
-        Log.d("Reading: ", "Reading all items..");
-        List<ShopItem> items = db.getAllItems("items");
-        for (ShopItem item : items) {
-            String log = "Id: "+item.getItemId()+" ,Name: " + item.getItemName() + " ,Price: " + item.getItemPrice() + " ,URL: " + item.getImageURL();
-            // Writing Contacts to log
-            Log.d("Name: ", log);
-        }
-
-        Log.d("SHOP ITEM",items.toString());
-    }
-*/
 }
 
