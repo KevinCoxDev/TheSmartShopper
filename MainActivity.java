@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.settings_toolbar);
-        setSupportActionBar(toolbar);
 
         FloatingActionButton scanButton = (FloatingActionButton) findViewById(R.id.fab);
         scanButton.setOnClickListener(new View.OnClickListener() {
@@ -74,20 +71,20 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_list:
-                    loadFragment(new ShoppingListFragment());
+                    loadFragment(new FragmentList());
                     return true;
                 case R.id.navigation_budget:
+                    loadFragment(new FragmentBudget());
+                    return true;
+                case R.id.navigation_scan:
+                    loadFragment(new FragmentScanned());
+                    return true;
+                case R.id.navigation_cart:
                     Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
                     startActivity(loginIntent);
                     return true;
-                case R.id.navigation_scan:
-                    loadFragment(new ScannedListFragment());
-                    return true;
-                case R.id.navigation_cart:
-
-                    return true;
                 case R.id.navigation_settings:
-                    loadFragment(new SettingsFragment());
+                    //loadFragment(new SettingsFragment());
                     return true;
 
 

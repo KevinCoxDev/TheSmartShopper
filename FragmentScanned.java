@@ -14,7 +14,8 @@ import java.util.ArrayList;
  * Created by kevin on 19/02/2018.
  */
 
-public class ShoppingListFragment extends Fragment {
+public class FragmentScanned extends Fragment {
+
 
 
 
@@ -22,7 +23,7 @@ public class ShoppingListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_shopping_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
 
         //Call populateList method. Creates thread to populate list from DB
         ArrayList<ShopItem> jsonList = populateList();
@@ -41,7 +42,12 @@ public class ShoppingListFragment extends Fragment {
     private ArrayList<ShopItem> populateList(){
 
         ItemDataBaseHandler db = new ItemDataBaseHandler(getActivity());
-        return db.getAllItems("items");
+        return db.getAllItems("scanned");
     }
 
+    private void removeScannedItem(String itemId){
+
+        ItemDataBaseHandler db = new ItemDataBaseHandler(getActivity());
+        db.removeItem(itemId,"scanned");
+    }
 }

@@ -29,7 +29,7 @@ public class RecyclerViewAdapterScanned extends RecyclerView.Adapter<RecyclerVie
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.recyclerview_layout_scanned, parent, false);
+        View view = mInflater.inflate(R.layout.cardview_complete_layout, parent, false);
         return new ViewHolder(view);
     }
 

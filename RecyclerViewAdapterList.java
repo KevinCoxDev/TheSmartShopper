@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Collections;
@@ -29,8 +30,9 @@ public class RecyclerViewAdapterList extends RecyclerView.Adapter<RecyclerViewAd
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.recyclerview_layout_list, parent, false);
-        return new ViewHolder(view);
+        View view = mInflater.inflate(R.layout.cardview_complete_layout, parent, false);
+        ViewHolder viewHolder =  new ViewHolder(view);
+        return viewHolder;
     }
 
     // binds the data to the textview in each row
@@ -38,7 +40,7 @@ public class RecyclerViewAdapterList extends RecyclerView.Adapter<RecyclerViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         ShopItem item = mData.get(position);
         holder.myTextView1.setText(item.getItemName());
-        holder.myTextView2.setText(item.getItemPrice().toString());
+        holder.myTextView2.setText("Price: "+item.getItemPrice().doubleValue());
     }
 
     // total number of rows
@@ -52,11 +54,13 @@ public class RecyclerViewAdapterList extends RecyclerView.Adapter<RecyclerViewAd
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView myTextView1;
         public TextView myTextView2;
+        public LinearLayout mLinearLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
             myTextView1 = itemView.findViewById(R.id.TITLE_TEXT);
             myTextView2 = itemView.findViewById(R.id.SUB_TEXT);
+            mLinearLayout = itemView.findViewById(R.id.simpleListView);
             itemView.setOnClickListener(this);
         }
 
