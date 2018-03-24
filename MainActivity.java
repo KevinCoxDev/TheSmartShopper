@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,14 +28,8 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
 
-
-        FloatingActionButton scanButton = (FloatingActionButton) findViewById(R.id.fab);
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                scanActivity();
-            }
-        });
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
     }
 
@@ -46,13 +40,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.toolbar, menu);
         return true;
     }
-
-    public void scanActivity(){
-        Intent myIntent = new Intent(getBaseContext(), ScanActivity.class);
-        startActivity(myIntent);
-    }
-
-
 
     private void loadFragment(Fragment fragment) {
         // create a FragmentManager
@@ -84,15 +71,30 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(loginIntent);
                     return true;
                 case R.id.navigation_settings:
-                    //loadFragment(new SettingsFragment());
+                    //loadFragment(new FragmentDrawer());
+                    Intent myIntent = new Intent(getBaseContext(), ScanActivity.class);
+                    startActivity(myIntent);
                     return true;
-
-
 
             }
             return false;
         }
     };
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        Log.d("Toolbar Icon Listener", item.toString());
+
+        //noinspection SimplifiableIfStatement
+        if (item.getItemId() == R.id.search_icon) {
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
 }
 
