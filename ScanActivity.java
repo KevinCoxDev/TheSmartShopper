@@ -124,7 +124,7 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                db.addItem(item,"SCANNED");
+                db.addItem(item,"SCANNED",db.getWritableDatabase());
                 scannerView.resumeCameraPreview(ScanActivity.this);
             }
         });

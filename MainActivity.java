@@ -9,9 +9,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
     }
 
@@ -81,20 +84,47 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        Log.d("Toolbar Icon Listener", item.toString());
-
-        //noinspection SimplifiableIfStatement
-        if (item.getItemId() == R.id.search_icon) {
-
-        }
-
-
-        return super.onOptionsItemSelected(item);
+    public void switcherButton1(View v)
+    {
+        Toast.makeText(this, "Clicked on Button", Toast.LENGTH_SHORT).show();
+        loadFragment(new FragmentList());
     }
+
+    public void switcherButton2(View v)
+    {
+        Toast.makeText(this, "Clicked on Button2", Toast.LENGTH_SHORT).show();
+        loadFragment(new FragmentListSelected());
+    }
+
+    public void addToListButton(View v)
+    {
+        Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
+        db.changeQuantity("17","items",1);
+    }
+
+    public void minusQuantityButton(View v)
+    {
+        Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
+        db.changeQuantity("17","items",-1);
+    }
+
+    public void toolbarMenu(View v)
+    {
+        Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void toolbarSearch(View v)
+    {
+        Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
+        if(this.findViewById(R.id.search_text_input).getVisibility() == View.INVISIBLE){
+            this.findViewById(R.id.search_text_input).setVisibility(View.VISIBLE);
+        }
+        else{
+            this.findViewById(R.id.search_text_input).setVisibility(View.INVISIBLE);
+        }
+    }
+
+
 }
 

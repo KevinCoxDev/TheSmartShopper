@@ -10,16 +10,14 @@ public class ShopItem {
     private String itemName;
     private Double itemPrice;
     private String itemImageURL;
+    private int itemQuantity;
 
-    public ShopItem(int itemId, String itemName, Double itemPrice, String itemImageURL) {
+    public ShopItem(int itemId, String itemName, Double itemPrice, String itemImageURL, int itemQuantity) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemImageURL = itemImageURL;
-    }
-
-    public String toString(){
-        return "ItemId: " + itemId+ "\n" + "ItemName: " + itemName+ "\n" + "ItemPrice: " + itemPrice+ "\n" + "ItemImageURL: " + itemImageURL;
+        this.itemQuantity = itemQuantity;
     }
 
     public int getItemId() {
@@ -50,7 +48,10 @@ public class ShopItem {
         return itemImageURL;
     }
 
-    public void setImageURL(String imageURL) {
-        this.itemImageURL = imageURL;
-    }
+    public void setImageURL(String imageURL) {this.itemImageURL = imageURL;}
+
+    public int getItemQuantity() {return itemQuantity;}
+
+    public void setItemQuantity(int itemQuantity) {this.itemQuantity = itemQuantity;}
+
 }
