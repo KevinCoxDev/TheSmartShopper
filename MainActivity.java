@@ -3,37 +3,52 @@ package kevin.cox.thesmartshopper;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
 
 
-    private ItemDataBaseHandler db = new ItemDataBaseHandler(this);
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent myIntent = new Intent(MainActivity.this, LoginActivity.class);
+        MainActivity.this.startActivity(myIntent);
         setContentView(R.layout.activity_main);
-
+        ItemDataBaseHandler db = new ItemDataBaseHandler(this);
+        Log.d("DB POPULATE 2",db.getAllItems("items").toString());
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(navigation);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
-
-
+        ThreadJsonPull thread = new ThreadJsonPull();
+        try {
+            ArrayList<ShopItem> items = thread.execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -61,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_list:
-                    loadFragment(new FragmentList());
+                    loadFragment(new FragmentListAvailible());
                     return true;
                 case R.id.navigation_budget:
                     loadFragment(new FragmentBudget());
@@ -70,13 +85,7 @@ public class MainActivity extends AppCompatActivity {
                     loadFragment(new FragmentScanned());
                     return true;
                 case R.id.navigation_cart:
-                    Intent loginIntent = new Intent(getBaseContext(), LoginActivity.class);
-                    startActivity(loginIntent);
-                    return true;
-                case R.id.navigation_settings:
-                    //loadFragment(new FragmentDrawer());
-                    Intent myIntent = new Intent(getBaseContext(), ScanActivity.class);
-                    startActivity(myIntent);
+                    loadFragment(new FragmentCheckout());
                     return true;
 
             }
@@ -86,45 +95,49 @@ public class MainActivity extends AppCompatActivity {
 
     public void switcherButton1(View v)
     {
-        Toast.makeText(this, "Clicked on Button", Toast.LENGTH_SHORT).show();
-        loadFragment(new FragmentList());
-    }
 
+        loadFragment(new FragmentListAvailible());
+        this.findViewById(R.id.left_tab_button).setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        this.findViewById(R.id.right_tab_button).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+    }
     public void switcherButton2(View v)
     {
-        Toast.makeText(this, "Clicked on Button2", Toast.LENGTH_SHORT).show();
-        loadFragment(new FragmentListSelected());
+
+        loadFragment(new FragmentListMyList());
+        this.findViewById(R.id.right_tab_button).setBackgroundColor(getResources().getColor(R.color.colorWhite));
+        this.findViewById(R.id.left_tab_button).setBackgroundColor(getResources().getColor(R.color.colorPrimary));
     }
 
-    public void addToListButton(View v)
+    public void toolbarSettings(View v)
     {
-        Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
-        db.changeQuantity("17","items",1);
-    }
-
-    public void minusQuantityButton(View v)
-    {
-        Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
-        db.changeQuantity("17","items",-1);
-    }
-
-    public void toolbarMenu(View v)
-    {
-        Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+        loadFragment(new FragmentSettings());
 
     }
 
     public void toolbarSearch(View v)
     {
-        Toast.makeText(this, "Added to Cart", Toast.LENGTH_SHORT).show();
-        if(this.findViewById(R.id.search_text_input).getVisibility() == View.INVISIBLE){
-            this.findViewById(R.id.search_text_input).setVisibility(View.VISIBLE);
+        if(this.findViewById(R.id.search_text_input_bar).getVisibility() == View.INVISIBLE){
+            this.findViewById(R.id.search_text_input_bar).setVisibility(View.VISIBLE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+            switcherButton1(v);
         }
         else{
-            this.findViewById(R.id.search_text_input).setVisibility(View.INVISIBLE);
+            this.findViewById(R.id.search_text_input_bar).setVisibility(View.INVISIBLE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.RESULT_HIDDEN,0);
         }
     }
 
+    public void editText(View v){
 
+    }
+
+    public void cameraButton(View v)
+    {
+        Intent myIntent = new Intent(getBaseContext(), ScanActivity.class);
+        startActivity(myIntent);
+    }
 }
 

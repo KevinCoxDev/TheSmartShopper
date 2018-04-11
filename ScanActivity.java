@@ -1,5 +1,7 @@
 package kevin.cox.thesmartshopper;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -8,8 +10,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
@@ -25,6 +30,7 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
     private ZXingScannerView scannerView;
     private ItemDataBaseHandler db = new ItemDataBaseHandler(this);
     private ShopItem item;
+    private final String tableName = "scanned";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +47,11 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
                 requestPermission();
             }
         }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
     }
 
     @Override
@@ -54,8 +65,6 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
                     //scannerView = new ZXingScannerView(this);
                     scannerView= (ZXingScannerView) findViewById(R.id.zxscan);
                     //setContentView(scannerView);
-                    Button scanButton= new Button(this);
-                    scanButton.setText("Flash Light");
                     setContentView(scannerView);
                 }
                 scannerView.setResultHandler(this);
@@ -118,30 +127,12 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
         else{
             display = "Item not found in Database";
         }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Scanned:");
-        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                db.addItem(item,"SCANNED",db.getWritableDatabase());
-                scannerView.resumeCameraPreview(ScanActivity.this);
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                scannerView.resumeCameraPreview(ScanActivity.this);
-            }
-        });
-        builder.setMessage(display);
-        AlertDialog alert1 = builder.create();
-        alert1.show();
+        showDialog(this,display,item);
     }
 
 
     private ShopItem checkData(String id){
-        ShopItem scanned = db.getItem(Integer.parseInt(id));
+        ShopItem scanned = db.getItem(Integer.parseInt(id),"items");
         if(scanned != null){
             return scanned;
         }
@@ -166,4 +157,35 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
                 .create()
                 .show();
     }
+
+    public void showDialog(Activity activity, String msg, final ShopItem shopitem){
+        final Dialog dialog = new Dialog(activity);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_scan);
+        final ItemDataBaseHandler db = new ItemDataBaseHandler(this);
+
+        TextView text = (TextView) dialog.findViewById(R.id.scanned_item_name);
+        text.setText(msg);
+        Button plusButton = (Button) dialog.findViewById(R.id.add_to_scanned);
+        plusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db.increaseQuantiy(17,"scanned",1);
+                dialog.dismiss();
+                scannerView.resumeCameraPreview(ScanActivity.this);
+            }
+        });
+        Button minusButton = (Button) dialog.findViewById(R.id.cancel_scan);
+        minusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                scannerView.resumeCameraPreview(ScanActivity.this);
+            }
+        });
+        dialog.show();
+
+    }
+
+
 }

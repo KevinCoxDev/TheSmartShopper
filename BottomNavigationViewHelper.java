@@ -1,9 +1,14 @@
 package kevin.cox.thesmartshopper;
-
 /**
- * Created by kevin on 29/01/2018.
+ * The BottomNavigationViewHelper keeps navigation items restriced and
+ * in the correct position
+ *
+ * @author  Kevin Cox
+ * @version 1.2
+ * @since   2018-04-10
  */
 
+import android.annotation.SuppressLint;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
@@ -12,6 +17,7 @@ import android.util.Log;
 import java.lang.reflect.Field;
 
 class BottomNavigationViewHelper {
+    @SuppressLint("RestrictedApi")
     public static void disableShiftMode(BottomNavigationView view) {
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) view.getChildAt(0);
         try {
